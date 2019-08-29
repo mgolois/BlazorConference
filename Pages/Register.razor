@@ -1,0 +1,59 @@
+﻿@using BlazorConference.Models;
+@using BlazorConference.Services;
+@inherits BlazorConference.ViewModels.RegisterModel
+@page "/Register"
+
+<h1>Conference Registration</h1>
+
+
+@if (registration == null)
+{
+    <p><em>Loading data...</em></p>
+}
+else
+{
+    <div>
+        <EditForm Model="@registration" OnValidSubmit="SubmitRegistration" OnInvalidSubmit="InvalidRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:50%">Ticket</th>
+                        <th align="center" style="width:15%">Unit Price</th>
+                        <th align="center" style="width:10%">Quantity</th>
+                        <th align="center" style="width:15%">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var selection in registration.TicketSelections)
+                    {
+                        <tr class="table-primary">
+                            <td>@selection.Ticket.Type</td>
+                            <td align="center">@selection.Ticket.Price.ToString("$#.00")</td>
+                            <td align="center">
+                                <InputNumber T="int" Value="@selection.Quantity" ValueChanged="@((qty)=> QuantityChanged(selection, qty))" ValueExpression="@(()=> selection.Quantity)" class="form-control text-center"></InputNumber>
+                            </td>
+                            <td align="center">
+                                @(selection.Price?.ToString("$0.00") ?? "--")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <RegisterAttendee TicketSelection="@selection" Updated="@((a,b,c)=> OnTicketUpdated(selection,a,b,c))"></RegisterAttendee>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="3" align="right">Total Price</td>
+                        <td align="center">@(registration.TotalPrice?.ToString("$0.00") ?? "--")</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </EditForm>
+    </div>
+}
