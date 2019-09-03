@@ -1,0 +1,72 @@
+﻿@page "/contact"
+@inherits BlazorConference.ViewModels.ContactViewModel
+
+<section id="contacts" class="section location">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="section-title">Contact US</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <h4>Event Location</h4>
+                <address>
+                    <p>
+                        Wyndham Hotel Gettysburg
+                        <br> 95 Presidential Cir
+                        <br> Gettysburg, PA 17325
+                    </p>
+                </address>
+                <h4>Church Location</h4>
+                <address>
+                    <p>
+                        CMFI Westminster, Maryland
+                        <br> 40 S. Church ST
+                        <br> Westminster, MD 21157
+                        <br> Phone: 410-751-6439
+                        <br> Email: info@cmfimaryland.com
+                        <br> Web: <a href="http://www.cmfimaryland.com" target="_blank">www.cmfimaryland.com</a>
+                    </p>
+                </address>
+            </div>
+            <div class="col-sm-9">
+                <EditForm Model="@Request" OnValidSubmit="@OnFormSubmitted">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="row">
+                        <div class="col-md-12" id="contact-msg" style="display:none;">
+                            <div class="alert"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>First Name:</label>
+                            <InputText @bind-Value="@Request.FirstName" required class="form-control" placeholder="First Name"></InputText>
+                        </div>
+                        <div class="col-md-6">
+                            <label> Last Name:</label>
+                            <InputText @bind-Value="@Request.LastName" required class="form-control" placeholder="Last Name"></InputText>
+                        </div>
+                        <div class="col-md-6">
+                            <label> Phone:</label>
+                            <InputText @bind-Value="@Request.Phone" class="form-control" placeholder="Phone" id="phone" name="phone"></InputText>
+                        </div>
+                        <div class="col-md-6">
+                            <label> Email:</label>
+                            <InputText @bind-Value="@Request.Email" required class="form-control" placeholder="Email Address"></InputText>
+                        </div>
+                        <div class="col-md-12">
+                            <label> Comment:</label>
+                            <div>
+                                <InputTextArea @bind-Value="@Request.Comment" required class="form-control" placeholder="Comment"></InputTextArea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <br/>
+                        <button type="submit" class="btn btn-primary" id="registration-submit-btn">Submit</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,55 @@
+﻿@page "/about"
+@inherits BlazorConference.ViewModels.AboutViewModel
+
+
+
+<div class="row" style="text-align: justify">
+    <div class="col-md-8">
+        <h3 class="section-title">About The Conference</h3>
+        <p>
+            <img alt="" style="padding: 15px; width: 250px" class="rounded float-left" src="images/BishopAndDrFondong.jpg" align="left">            We are excited to announce the 2018 Washington Prophetic Conference.
+            We are excited to announce the upcoming 2019 USA Prophetic Convention.
+            This annual program will hold from Wednesday, July 3, to Sunday, July 7, 2019  under the theme
+            “God’s Word To America” with Prophet Sadhu Sundar Selvaraj, Dr. Bruce Allen, Dr. Steven Francis,
+            Pastor Johnny Taylor, and Christian songwriter and recording artist, Terry MacAlmon.
+            Due to the uniqueness of this program, we ask that all who desire to attend this convention register
+            as soon as possible. Believers from all over the world are gathering in Gettysburg,
+            Pennsylvania to attend this life transforming event as we wait on God and intercede for our nation
+            <br>
+
+            We have secured the <a target="_blank" href="https://www.wyndhamhotels.com/wyndham/gettysburg-pennsylvania/wyndham-gettysburg/overview">Wyndham Hotel in Gettysburg, PA</a> for this event. For children aged 3-9,
+            childcare will be available at the cost of $15 per child. Childcare service is optional.
+            For everyone else, registration is set at $50 per attendee.  This special rate is non-refundable.
+            The deadline for registration is May 31. From June 1, 2019, late registration will cost $75 per person.
+            Please register within the next three months and take advantage of this exceptional value.
+            In addition, we have reserved a block of rooms at the discounted rates of $144/night for a King Bedroom and $144/night
+            for a Double Queen Bedroom. These rooms are available on a first come, first served basis.
+            Please call the Wyndham Hotel in Gettysburg at 717-339-0020 for booking and mention the event name
+            "USA Prophetic Convention" to enjoy these steep discounts.
+            <br>
+
+            We entreat you to keep this program in your prayers. Prayer topics will be circulated in due time.
+            The glory of God will be manifested at these meetings and the Lord will be present to save, instruct, heal, deliver, and transform.
+            We implore you not to miss this glorious occasion. We are expecting amazing things to happen in our midst.
+            Our prayer is that permission and visas to attend will be granted as needed.
+            You will not regret any sacrifices made to partake in this monumental event.
+            <br>
+            More information will be provided and updated on the convention website, <a href="https://www.usapropheticconvention.com">www.USAPropheticConvention.com</a>,
+            as the date of the program approaches. Please feel free to email us at contact@USAPropheticConvention.com, or
+            call <strong>Br Paul Kempa (443-508-1770)</strong> or <strong>Br Golois Mouelet (443-789-6732)</strong> with all your inquiries.
+        </p>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><strong>News &amp; Announcements</strong></div>
+            <div class="card-body">
+                <ul class="nav flex-column">
+                @foreach(var item in newsItems)
+                {
+                    <li> <strong>@item.Date.ToString("MMM, dd")</strong>: <a href="@item.Link" target="_blank">@item.Description</a> </li>
+                }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

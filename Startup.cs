@@ -31,7 +31,8 @@ namespace BlazorConference
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<TicketService>();
+            services.AddSingleton<TicketService>();//NewsService
+            services.AddSingleton<NewsService>();//NewsService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

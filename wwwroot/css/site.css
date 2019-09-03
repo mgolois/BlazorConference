@@ -7,7 +7,34 @@ html, body {
 a, .btn-link {
     color: #0366d6;
 }
-
+.site-header {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh !important;
+    position: relative;
+    text-align: center;
+    background: url(../images/america.png) no-repeat center center/cover;
+}
+    .site-header .intro {
+        color: #fff;
+        position: relative;
+        text-align: center;
+        text-transform: uppercase;
+        width: 100%;
+        z-index: 1;
+        padding: 0 15px;
+    }
+.valign-center {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 100px;
+}
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
