@@ -81,7 +81,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label>First Name:</label>
-                        <InputText required @bind-Value="@registration.BillingInfo.FirstName" class="form-control" placeholder="First Name" id="bfirstName" name="pfirstName"></InputText>
+                        <InputText @bind-Value="@registration.BillingInfo.FirstName" class="form-control" placeholder="First Name" id="bfirstName" name="pfirstName"></InputText>
                         <ValidationMessage For="@(() => registration.BillingInfo.FirstName)" />
                     </div>
                     <div class="form-group">
@@ -203,13 +203,19 @@
             <br />
             <div class="text-center">
                 <button type="submit" class="btn btn-success">Submit</button>
+                @if (!string.IsNullOrWhiteSpace(message))
+                {
+                <div class="alert alert-primary" role="alert">
+                    @message
+                </div>
+                }
             </div>
         </EditForm>
     </div>
 </div>
 
 @code {
-
+    private string message = "";
     private Registration registration = new Registration();
     protected List<Country> countries = new List<Country>();
 
@@ -227,11 +233,13 @@
 
     protected void SubmitRegistration()
     {
+        message = "Form successfully submitted";
         var model = registration.TicketSelections;
     }
 
     protected void InvalidRegistration()
     {
+        message = "invalid form";
         var model = registration.TicketSelections;
     }
 
