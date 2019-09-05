@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorConference.Models
 {
-    public class ContactRequest
+    public class ContactRequest : ContactInformation
     {
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
-        public string Phone { get; set; }
-        [Required]
-        public string Email { get; set; }
-        public string Comment { get; set; }
+        public string ToHtml()
+        {
+            return $@"<h2>Contact Form</h2>
+First Name: {FirstName} <br/>
+Last Name : {LastName} <br />
+Phone     : {Phone} <br/>
+Email     : {Email} <br />
+Date Sent : {DateTime.Now.ToString("ddd, MMM dd, yyyy hh:mmtt")}";
+
+        }
     }
+
 }

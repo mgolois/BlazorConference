@@ -1,7 +1,7 @@
 ﻿@using BlazorConference.Models;
 @if (TicketSelection?.Attendees != null)
 {
-    <DataAnnotationsValidator />
+    int count = 0;
     <table class="table table-light">
         <thead class="thead-light">
             <tr>
@@ -11,34 +11,48 @@
             </tr>
         </thead>
         <tbody>
+
             @foreach (var attendee in TicketSelection.Attendees)
             {
-                <tr>
+                var first = $"first{count}"; var last = $"last{count}"; var age = $"age{count}"; count++;
+                <tr @key="@attendee">
                     <td style="width:40%">
-                        <InputText id="@("firstName"+attendee.Id)" required Value="@attendee.FirstName" ValueChanged="@((obj)=> { OnUpdate(attendee.Id, obj, 0); })" ValueExpression="@(()=> attendee.FirstName)" class="form-control" placeholder="first name"></InputText>
+                        <InputText @bind-Value="@attendee.FirstName" class="form-control" id="@first" name="@first" placeholder="first name"></InputText>
                         <ValidationMessage For="@(()=> attendee.FirstName)"></ValidationMessage>
                     </td>
                     <td style="width:40%">
-                        <InputText id="@("lastName"+attendee.Id)" required Value="@attendee.LastName" ValueChanged="@((obj)=> { OnUpdate(attendee.Id, obj, 1); })" ValueExpression="@(()=> attendee.LastName)" class="form-control" placeholder="last name"></InputText>
+                        <InputText @bind-Value="@attendee.LastName" class="form-control" placeholder="last name" id="@last" name="@last"></InputText>
                         <ValidationMessage For="@(()=> attendee.LastName)"></ValidationMessage>
                     </td>
                     <td style="width:20%">
                         @if (TicketSelection.Ticket.AgeRequired)
                         {
-                            <InputNumber id="@("age" + attendee.Id)" T="int?" required min="@TicketSelection.Ticket.FromAge" max="@TicketSelection.Ticket.ToAge" Value="@attendee.Age" ValueChanged="@((obj) => { OnUpdate(attendee.Id, obj, 2); })" ValueExpression="@(() => attendee.Age)" class="form-control" placeholder="age">
+                            <InputNumber T="int?" min="@TicketSelection.Ticket.FromAge" max="@TicketSelection.Ticket.ToAge" @bind-Value="@attendee.Age" class="form-control" placeholder="age" id="@age" name="@age">
                             </InputNumber>
-                            @*<input type="text" min="@TicketSelection.Ticket.FromAge" max="@TicketSelection.Ticket.ToAge" value="@attendee.Age" onchange="@" />*@
-                            @*<select id="@("age" + attendee.Id)" onselect=@(e=> Console.WriteLine(e)) >
-                                    <option></option>
-                                    @for(int i=TicketSelection.Ticket.FromAge.Value; i <= TicketSelection.Ticket.ToAge; i++)
-                                    {
-                                        <option>@i</option>
-                                    }
-                                </select>*@
                         }
                     </td>
                 </tr>
             }
+            @* @foreach (var attendee in TicketSelection.Attendees)
+                {
+                    <tr>
+                        <td style="width:40%">
+                            <InputText id="@("firstName"+attendee.Id)" required Value="@attendee.FirstName" ValueChanged="@((obj)=> { OnUpdate(attendee.Id, obj, 0); })" ValueExpression="@(()=> attendee.FirstName)" class="form-control" placeholder="first name"></InputText>
+                            <ValidationMessage For="@(()=> attendee.FirstName)"></ValidationMessage>
+                        </td>
+                        <td style="width:40%">
+                            <InputText id="@("lastName"+attendee.Id)" required Value="@attendee.LastName" ValueChanged="@((obj)=> { OnUpdate(attendee.Id, obj, 1); })" ValueExpression="@(()=> attendee.LastName)" class="form-control" placeholder="last name"></InputText>
+                            <ValidationMessage For="@(()=> attendee.LastName)"></ValidationMessage>
+                        </td>
+                        <td style="width:20%">
+                            @if (TicketSelection.Ticket.AgeRequired)
+                            {
+                                <InputNumber id="@("age" + attendee.Id)" T="int?" required min="@TicketSelection.Ticket.FromAge" max="@TicketSelection.Ticket.ToAge" Value="@attendee.Age" ValueChanged="@((obj) => { OnUpdate(attendee.Id, obj, 2); })" ValueExpression="@(() => attendee.Age)" class="form-control" placeholder="age">
+                                </InputNumber>
+                    }
+                    </td>
+                    </tr>
+                }*@
         </tbody>
     </table>
 }
@@ -46,15 +60,15 @@
     [Parameter]
     public TicketSelection TicketSelection { get; set; }
 
-    [Parameter]
-    public Action<Guid, dynamic, int> Updated { get; set; }
+    //[Parameter]
+    //public Action<Guid, dynamic, int> Updated { get; set; }
 
-    public void OnUpdate(Guid attendeeId, dynamic value, int order)
-    {
-        Updated.Invoke(attendeeId, value, order);
-    }
-    void test(UIChangeEventArgs e)
-    {
+    //public void OnUpdate(Guid attendeeId, dynamic value, int order)
+    //{
+    //    Updated.Invoke(attendeeId, value, order);
+    //}
+    //void test(UIChangeEventArgs e)
+    //{
 
-    }
+    //}
 }

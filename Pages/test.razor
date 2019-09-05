@@ -1,0 +1,246 @@
+﻿@using BlazorConference.Models;
+@using BlazorConference.Services;
+@inject TicketService ticketService
+@page "/Test"
+<div class="content px-4">
+    <div class="container">
+
+
+        <EditForm Model="@registration" OnValidSubmit="SubmitRegistration" OnInvalidSubmit="InvalidRegistration">
+            <DataAnnotationsValidator />
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:50%">Ticket</th>
+                        <th align="center" style="width:15%">Unit Price</th>
+                        <th align="center" style="width:10%">Quantity</th>
+                        <th align="center" style="width:15%">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var selection in registration.TicketSelections)
+                    {
+                        <tr @key="@selection" class="table-primary">
+                            <td>@selection.Ticket.Type</td>
+                            <td align="center">@selection.Ticket.Price.ToString("$#.00")</td>
+                            <td align="center">
+                                <InputNumber T="int" Value="@selection.Quantity" ValueChanged="@((qty)=> QuantityChanged(selection, qty))" ValueExpression="@(()=> selection.Quantity)" class="form-control text-center"></InputNumber>
+                            </td>
+                            <td align="center">
+                                @(selection.Price?.ToString("$0.00") ?? "--")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-light">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-center">First Name</th>
+                                            <th class="text-center">Last Name</th>
+                                            <th class="text-center">Age</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var attendee in selection.Attendees)
+                                        {
+                                            <tr @key="@attendee">
+                                                <td style="width:40%">
+                                                    <InputText @bind-Value="@attendee.FirstName" class="form-control" placeholder="first name"></InputText>
+                                                    <ValidationMessage For="@(()=> attendee.FirstName)"></ValidationMessage>
+                                                </td>
+                                                <td style="width:40%">
+                                                    <InputText @bind-Value="@attendee.LastName" class="form-control" placeholder="last name"></InputText>
+                                                    <ValidationMessage For="@(()=> attendee.LastName)"></ValidationMessage>
+                                                </td>
+                                                <td style="width:20%">
+                                                    @if (selection.Ticket.AgeRequired)
+                                                    {
+                                                        <InputNumber T="int?" min="@selection.Ticket.FromAge" max="@selection.Ticket.ToAge" @bind-Value="@attendee.Age" class="form-control" placeholder="age">
+                                                        </InputNumber>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="3" align="right">Total Price</td>
+                        <td align="center">@(registration.TotalPrice?.ToString("$0.00") ?? "--")</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="text-center">Billing Information</h3>
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <InputText required @bind-Value="@registration.BillingInfo.FirstName" class="form-control" placeholder="First Name" id="bfirstName" name="pfirstName"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.FirstName)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <InputText @bind-Value="@registration.BillingInfo.LastName" class="form-control" placeholder="Last Name" id="bLastName" name="pLastName"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.LastName)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number:</label>
+                        <InputText @bind-Value="@registration.BillingInfo.CardNumber" class="form-control" placeholder="Credit Card Number" id="creditCard" name="creditCard"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.CardNumber)" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Expiration Month:</label>
+                                <InputSelect T="string" @bind-Value="@registration.BillingInfo.ExpirationMonth" class="form-control" name="expirationMonth" id="expirationMonth">
+                                    <option value="">Select Month:</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => registration.BillingInfo.ExpirationMonth)" />
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Expiration Year:</label>
+                                <InputNumber T="int" @bind-Value="@registration.BillingInfo.ExperirationYear" class="form-control" placeholder="YYYY" id="expirationYear" name="expirationYear"></InputNumber>
+                                <ValidationMessage For="@(() => registration.BillingInfo.ExperirationYear)" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Security Code:</label>
+                                <InputText @bind-Value="@registration.BillingInfo.SecurityCode" class="form-control" placeholder="security code" id="securityCode" name="securityCode"></InputText>
+                                <ValidationMessage For="@(() => registration.BillingInfo.SecurityCode)" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Card Type</label>
+                                <InputSelect T="string" @bind-Value="@registration.BillingInfo.CardType" class="form-control" name="cardType" id="cardType">
+                                    <option value="">Select Type:</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="mastercard">MasterCard</option>
+                                    <option value="amex">American Express</option>
+                                    <option value="discover">Discover Card</option>
+                                </InputSelect>
+                                <ValidationMessage For="@(() => registration.BillingInfo.CardType)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address:</label>
+                        <InputText type="email" @bind-Value="@registration.BillingInfo.Email" class="form-control" placeholder="Email" id="email" name="email"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.Email)" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <InputText @bind-Value="@registration.BillingInfo.Phone" class="form-control" placeholder="Phone" id="phone" name="phone"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.Phone)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address:</label>
+                        <InputText type="text" @bind-Value="@registration.BillingInfo.Address" class="form-control" placeholder="Address" id="address" name="address"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.Address)" />
+                    </div>
+                    <div class="form-group">
+                        <label>City:</label>
+                        <InputText type="text" @bind-Value="@registration.BillingInfo.City" class="form-control" placeholder="City" id="city" name="city"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.City)" />
+                    </div>
+                    <div class="form-group">
+                        <label>State/Province:</label>
+                        <InputText @bind-Value="@registration.BillingInfo.State" class="form-control" placeholder="State" id="state" name="state"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.State)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Zip/Postal Code:</label>
+                        <InputText @bind-Value="@registration.BillingInfo.Zipcode" class="form-control" placeholder="Zipcode" id="zipcode" name="zipcode"></InputText>
+                        <ValidationMessage For="@(() => registration.BillingInfo.Zipcode)" />
+                    </div>
+                    <div class="form-group">
+                        <label>Country:</label>
+                        <InputSelect T="string" @bind-Value="@registration.BillingInfo.Country" class="form-control" name="country" id="country">
+                            <option readonly>Select Country:</option>
+                            @foreach (var c in countries)
+                            {
+                                <option value="@c.CountryAbbr">@c.CountryName</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => registration.BillingInfo.Country)" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label>Comment/Prayer Request:</label>
+                    <InputTextArea @bind-Value="@registration.BillingInfo.Comment" class="form-control" name="comment" id="comment"></InputTextArea>
+                </div>
+            </div>
+            <br />
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private Registration registration = new Registration();
+    protected List<Country> countries = new List<Country>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        var tickets = await ticketService.GetTicketsAsync();
+        countries = CountryService.GetCountries();
+        tickets.ForEach(t => registration.TicketSelections.Add(new TicketSelection
+        {
+            Quantity = 0,
+            Ticket = t,
+            Attendees = new List<Attendee>()
+        }));
+    }
+
+    protected void SubmitRegistration()
+    {
+        var model = registration.TicketSelections;
+    }
+
+    protected void InvalidRegistration()
+    {
+        var model = registration.TicketSelections;
+    }
+
+    protected void QuantityChanged(TicketSelection selection, int quantity)
+    {
+        quantity = quantity < 0 ? 0 : quantity;
+        selection.Quantity = quantity;
+        selection.Attendees = new List<Attendee>();
+        selection.Attendees = Enumerable.Range(0, quantity).Select(c => new Attendee()).ToList();
+    }
+
+}
