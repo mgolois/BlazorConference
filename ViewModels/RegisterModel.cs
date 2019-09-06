@@ -19,7 +19,7 @@ namespace BlazorConference.ViewModels
         protected async override Task OnInitializedAsync()
         {
             var tickets = await ticketService.GetTicketsAsync();
-           // registration = new Registration();
+            registration = new Registration();
             tickets.ForEach(t => registration.TicketSelections.Add(new TicketSelection
             {
                 Quantity = 0,

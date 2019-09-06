@@ -1,5 +1,6 @@
 ﻿@using BlazorConference.Models;
 @using BlazorConference.Services;
+@using BlazorConference.Utils.Validations;
 @inject TicketService ticketService
 @page "/Test"
 <div class="content px-4">
@@ -7,7 +8,7 @@
 
 
         <EditForm Model="@registration" OnValidSubmit="SubmitRegistration" OnInvalidSubmit="InvalidRegistration">
-            <DataAnnotationsValidator />
+            <RecursiveDataAnnotationsValidator />
 
             <table class="table table-bordered table-hover">
                 <thead>
@@ -21,52 +22,52 @@
                 <tbody>
                     @foreach (var selection in registration.TicketSelections)
                     {
-                        <tr @key="@selection" class="table-primary">
-                            <td>@selection.Ticket.Type</td>
-                            <td align="center">@selection.Ticket.Price.ToString("$#.00")</td>
-                            <td align="center">
-                                <InputNumber T="int" Value="@selection.Quantity" ValueChanged="@((qty)=> QuantityChanged(selection, qty))" ValueExpression="@(()=> selection.Quantity)" class="form-control text-center"></InputNumber>
-                            </td>
-                            <td align="center">
-                                @(selection.Price?.ToString("$0.00") ?? "--")
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <table class="table table-light">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th class="text-center">First Name</th>
-                                            <th class="text-center">Last Name</th>
-                                            <th class="text-center">Age</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                    <tr @key="@selection" class="table-primary">
+                        <td>@selection.Ticket.Type</td>
+                        <td align="center">@selection.Ticket.Price.ToString("$#.00")</td>
+                        <td align="center">
+                            <InputNumber T="int" Value="@selection.Quantity" ValueChanged="@((qty)=> QuantityChanged(selection, qty))" ValueExpression="@(()=> selection.Quantity)" class="form-control text-center"></InputNumber>
+                        </td>
+                        <td align="center">
+                            @(selection.Price?.ToString("$0.00") ?? "--")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table class="table table-light">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">First Name</th>
+                                        <th class="text-center">Last Name</th>
+                                        <th class="text-center">Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                        @foreach (var attendee in selection.Attendees)
+                                    @foreach (var attendee in selection.Attendees)
                                         {
-                                            <tr @key="@attendee">
-                                                <td style="width:40%">
-                                                    <InputText @bind-Value="@attendee.FirstName" class="form-control" placeholder="first name"></InputText>
-                                                    <ValidationMessage For="@(()=> attendee.FirstName)"></ValidationMessage>
-                                                </td>
-                                                <td style="width:40%">
-                                                    <InputText @bind-Value="@attendee.LastName" class="form-control" placeholder="last name"></InputText>
-                                                    <ValidationMessage For="@(()=> attendee.LastName)"></ValidationMessage>
-                                                </td>
-                                                <td style="width:20%">
-                                                    @if (selection.Ticket.AgeRequired)
+                                    <tr @key="@attendee">
+                                        <td style="width:40%">
+                                            <InputText @bind-Value="@attendee.FirstName" class="form-control" placeholder="first name"></InputText>
+                                            <ValidationMessage For="@(()=> attendee.FirstName)"></ValidationMessage>
+                                        </td>
+                                        <td style="width:40%">
+                                            <InputText @bind-Value="@attendee.LastName" class="form-control" placeholder="last name"></InputText>
+                                            <ValidationMessage For="@(()=> attendee.LastName)"></ValidationMessage>
+                                        </td>
+                                        <td style="width:20%">
+                                            @if (selection.Ticket.AgeRequired)
                                                     {
-                                                        <InputNumber T="int?" min="@selection.Ticket.FromAge" max="@selection.Ticket.ToAge" @bind-Value="@attendee.Age" class="form-control" placeholder="age">
-                                                        </InputNumber>
+                                            <InputNumber T="int?" min="@selection.Ticket.FromAge" max="@selection.Ticket.ToAge" @bind-Value="@attendee.Age" class="form-control" placeholder="age">
+                                            </InputNumber>
                                                     }
-                                                </td>
-                                            </tr>
+                                        </td>
+                                    </tr>
                                         }
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                     }
                     <tr>
                         <td colspan="3" align="right">Total Price</td>
@@ -189,7 +190,7 @@
                             <option readonly>Select Country:</option>
                             @foreach (var c in countries)
                             {
-                                <option value="@c.CountryAbbr">@c.CountryName</option>
+                            <option value="@c.CountryAbbr">@c.CountryName</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="@(() => registration.BillingInfo.Country)" />
@@ -202,14 +203,15 @@
             </div>
             <br />
             <div class="text-center">
-                <button type="submit" class="btn btn-success">Submit</button>
                 @if (!string.IsNullOrWhiteSpace(message))
                 {
                 <div class="alert alert-primary" role="alert">
                     @message
                 </div>
+                <br />
                 }
             </div>
+            <button type="submit" class="btn btn-success">Submit</button>
         </EditForm>
     </div>
 </div>
